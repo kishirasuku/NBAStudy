@@ -100,6 +100,15 @@ def arrangeData(T,W,dataList):
         T.append(element)
 
 def compareRanking(T,rankList):
+    """[実際の順位と比較してスコアを算出する]
+
+    Args:
+        T ([String,int]): [チーム名,チームの評価点]
+        rankList ([int]): [実際の順位リスト]
+
+    Returns:
+        [int]: [スコア]
+    """
     #0からスタート、１チームごとの順位の離れ方で計算
     score = 0
 
@@ -132,6 +141,11 @@ def print3rdResult(T):
         print(i+1,"位",elm[0],":",elm[1],"点",flush=True)
 
 def printW(W):
+    """[スタッツを見やすく出力する]
+
+    Args:
+        W ([list]): [出力するリスト]
+    """
     print("FG%",W[0])
     print("3P%",W[1])
     print("FT%",W[2])
@@ -151,10 +165,6 @@ rank_file = "./dataFile/2021/2021レギュラーシーズン順位.csv"
 #データ読み込み
 statsDataList = readStatsFile(stats_file)
 rankDataList = readRankFile(rank_file)
-
-#arrangeData(T,W,dataList)
-
-#printResult(T)
 
 #試算開始
 start = time.time()
