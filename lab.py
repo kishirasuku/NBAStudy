@@ -12,14 +12,14 @@ def readFile(fileName):
     return df.values.tolist()
 
 def calculateALL(T,W,dataList):
-    for a in range(1,11):
-        for b in range(1,11):
-            for c in range(1,11):
-                for d in range(1,11):
-                    for e in range(1,11):
-                        for f in range(1,11):
-                            for g in range(1,11):
-                                for h in range(1,11):
+    for a in range(1,6):
+        for b in range(1,6):
+            for c in range(1,6):
+                for d in range(1,6):
+                    for e in range(1,6):
+                        for f in range(1,6):
+                            for g in range(1,6):
+                                for h in range(1,6):
                                         W = [a,b,c,d,e,f,g,h]
 
                                         arrangeData(T,W,dataList)
