@@ -12,6 +12,8 @@ def readFile(fileName):
     return df.values.tolist()
 
 def calculateALL(T,W,dataList):
+    bestW = [W,10]
+
     for a in range(1,6):
         for b in range(1,6):
             for c in range(1,6):
@@ -24,10 +26,18 @@ def calculateALL(T,W,dataList):
 
                                         arrangeData(T,W,dataList)
 
+                                        score = compareRanking(T)
+
+                                        if bestW[1] < score:
+                                            bestW[0] = W
+                                            bestW[1] = score
+
                                         print3rdResult(T)
                                         print()
 
                                         T = []
+
+    return bestW
 
 
 def arrangeData(T,W,dataList):
@@ -44,6 +54,11 @@ def arrangeData(T,W,dataList):
         for j in range(1,9):
             element[1] += W[j-1]*dataList[i][j]
         T.append(element)
+
+def compareRanking(T):
+    score = 0
+    return score
+    
 
 def printResult(T):
     for i,elm in enumerate(sorted(T,key=operator.itemgetter(1),reverse=True)):
@@ -71,7 +86,7 @@ dataList = readFile(fileName)
 
 start = time.time()
 
-calculateALL(T,W,dataList)
+bestW = calculateALL(T,W,dataList)
 
 end = time.time()
 
