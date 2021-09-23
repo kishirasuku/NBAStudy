@@ -6,12 +6,30 @@ import operator
 import time
 
 def readFile(fileName):
+    """[csvファイルからデータを取得してリストを返す]
+
+    Args:
+        fileName ([String]): [ファイル名]
+
+    Returns:
+        [list]: [各チームのデータ]
+    """
     with codecs.open(fileName, "r", "Shift-JIS", "ignore") as file:
         df = pd.read_table(file, delimiter=",")
 
     return df.values.tolist()
 
 def calculateALL(T,W,dataList):
+    """[全ての重みパターンで計算し、一番実際の順位に近いおもみリストを返す]
+
+    Args:
+        T ([String,int]): [チーム名,チームの評価点]
+        W ([list]): [おもみリスト]
+        dataList ([list]): [各チームのスタッツデータ]
+
+    Returns:
+        [list]: [実際の準備に一番近いおもみリスト]
+    """
     bestW = [W,10]
 
     for a in range(1,6):
@@ -41,6 +59,13 @@ def calculateALL(T,W,dataList):
 
 
 def arrangeData(T,W,dataList):
+    """[評価点リスト[T]を作り上げる]
+
+    Args:
+        T ([String,int]): [チーム名,各チームの総合評価点]
+        W ([int]): [重みリスト]
+        dataList ([int]): [各チームスタッツの順位]
+    """
     for i in range(1,9):
         dataList = sorted(dataList, key=operator.itemgetter(i))
 
@@ -61,10 +86,20 @@ def compareRanking(T):
     
 
 def printResult(T):
+    """[データからの全順位を出力]
+
+    Args:
+        T ([String,int]): [チーム名,各チームの評価点]
+    """
     for i,elm in enumerate(sorted(T,key=operator.itemgetter(1),reverse=True)):
         print(i+1,"位",elm[0],":",elm[1],"点")
 
 def print3rdResult(T):
+    """[3位までの結果を出力]
+
+    Args:
+        T ([String]): [チーム名,チームの評価点]
+    """
     by3rd = sorted(T,key=operator.itemgetter(1),reverse=True)
     by3rd = by3rd[0:3]
 
