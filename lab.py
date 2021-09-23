@@ -4,6 +4,7 @@ import csv
 import codecs
 import operator
 import time
+import os
 
 def readStatsFile(fileName):
     """[csvファイルからスタッツデータを取得してスタッツリストを返す]
@@ -144,8 +145,8 @@ def printW(W):
 df = None
 dataList = None
 T = []
-stats_file = "2021レギュラーシーズンスタッツ.csv"
-rank_file = "2021レギュラーシーズン順位.csv"
+stats_file = "./dataFile/2021/2021レギュラーシーズンスタッツ.csv"
+rank_file = "./dataFile/2021/2021レギュラーシーズン順位.csv"
 
 #データ読み込み
 statsDataList = readStatsFile(stats_file)
