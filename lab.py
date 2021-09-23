@@ -3,6 +3,7 @@ import pandas as pd
 import csv
 import codecs
 import operator
+import time
 
 def readFile(fileName):
     with codecs.open(fileName, "r", "Shift-JIS", "ignore") as file:
@@ -13,7 +14,7 @@ def readFile(fileName):
 def calculateALL(T,W,dataList):
     for a in range(1,11):
         for b in range(1,11):
-            for c in range(1,111):
+            for c in range(1,11):
                 for d in range(1,11):
                     for e in range(1,11):
                         for f in range(1,11):
@@ -68,6 +69,10 @@ dataList = readFile(fileName)
 
 #printResult(T)
 
+start = time.time()
+
 calculateALL(T,W,dataList)
 
-print3rdResult(T)
+end = time.time()
+
+print("Time : ",end-start)
