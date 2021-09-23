@@ -45,17 +45,18 @@ def calculateALL(T,dataList,rankList):
     Returns:
         [list]: [実際の準備に一番近いおもみリスト]
     """
+    omomi = 6
     bestW = [None,10000]
 
     #5^8通りの重みで試算
-    for a in range(1,6):
-        for b in range(1,6):
-            for c in range(1,6):
-                for d in range(1,6):
-                    for e in range(1,6):
-                        for f in range(1,6):
-                            for g in range(1,6):
-                                for h in range(1,6):
+    for a in range(1,omomi):
+        for b in range(1,omomi):
+            for c in range(1,omomi):
+                for d in range(1,omomi):
+                    for e in range(1,omomi):
+                        for f in range(1,omomi):
+                            for g in range(1,omomi):
+                                for h in range(1,omomi):
                                         W = [a,b,c,d,e,f,g,h]
 
                                         #Tを作成
