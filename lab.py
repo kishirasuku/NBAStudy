@@ -176,6 +176,7 @@ end = time.time()
 
 print("Time : ",end-start)
 
+#結果出力
 T = []
 
 arrangeData(T,bestW[0],statsDataList)
