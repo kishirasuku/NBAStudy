@@ -35,7 +35,7 @@ def readRankFile(fileName):
 
     return df.values.tolist()
 
-def calculateALL(T,dataList,rankList):
+def calculateALL(dataList,rankList,maxWeight):
     """[全ての重みパターンで計算し、一番実際の順位に近いおもみリストを返す]
 
     Args:
@@ -46,7 +46,8 @@ def calculateALL(T,dataList,rankList):
     Returns:
         [list]: [実際の準備に一番近いおもみリスト]
     """
-    omomi = 6
+    T = []
+    omomi = maxWeight
     bestW = [None,10000]
 
     #5^8通りの重みで試算
@@ -78,7 +79,7 @@ def calculateALL(T,dataList,rankList):
 
     return bestW
 
-def calculateALLByDaviation(T,dataList,rankList):
+def calculateALLByDaviation(dataList,rankList,maxWeight):
     """[全ての重みパターンで計算し、一番実際の順位に近いおもみリストを返す]
 
     Args:
@@ -89,7 +90,9 @@ def calculateALLByDaviation(T,dataList,rankList):
     Returns:
         [list]: [実際の準備に一番近いおもみリスト]
     """
-    omomi = 6
+
+    T=[]
+    omomi = maxWeight
     bestW = [None,10000]
 
     #5^8通りの重みで試算
@@ -120,7 +123,6 @@ def calculateALLByDaviation(T,dataList,rankList):
                                         T = []
 
     return bestW
-
 
 def arrangeData(T,W,dataList):
     """[評価点リスト[T]を作り上げる]
@@ -252,48 +254,78 @@ def printW(W):
     print("SPG",W[6])
     print("BPG",W[7])
 
+def main(stats_file,rank_file,maxWeight):
 
-df = None
-dataList = None
-T = []
+    #データ読み込み
+    statsDataList = readStatsFile(stats_file)
+    rankDataList = readRankFile(rank_file)
+
+    #試算開始
+    start = time.time()
+
+    #順位表を使った試算
+    bestW = calculateALL(statsDataList,rankDataList,maxWeight)
+
+    end = time.time()
+
+    print("Time : ",end-start)
+
+    #最良のWを使って順位を算出
+    T = []
+
+    #順位の場合
+    arrangeData(T,bestW[0],statsDataList)
+
+    #最良順位出力
+    printResult(T)
+
+    #重み出力
+    printW(bestW[0])
+
+    #ポイント出力
+    print("points:",bestW[1])
+
+def mainByDaviation(stats_file,rank_file,maxWeight):
+
+    #データ読み込み
+    statsDataList = readStatsFile(stats_file)
+    rankDataList = readRankFile(rank_file)
+
+    #スタッツデータを偏差値に変換
+    statsDataList = toDeviationValue(statsDataList)
+
+    #試算開始
+    start = time.time()
+
+    #偏差値を使った試算
+    bestW = calculateALLByDaviation(statsDataList,rankDataList,maxWeight)
+
+    end = time.time()
+
+    print("Time : ",end-start)
+
+    #最良のWを使って順位を算出
+    T = []
+
+    #偏差値の場合
+    arrangeDataByDaviation(T,bestW[0],statsDataList)
+
+    #最良順位出力
+    printResult(T)
+
+    #重み出力
+    printW(bestW[0])
+
+    #ポイント出力
+    print("points:",bestW[1])
+
+
 stats_file = "./dataFile/2021/2021レギュラーシーズンスタッツ.csv"
 rank_file = "./dataFile/2021/2021レギュラーシーズン順位.csv"
+maxWeight = 7
 
-#データ読み込み
-statsDataList = readStatsFile(stats_file)
-rankDataList = readRankFile(rank_file)
+#通常計算の場合
+main(stats_file,rank_file,maxWeight)
 
-#スタッツデータを偏差値に変換
-statsDataList = toDeviationValue(statsDataList)
-
-#試算開始
-start = time.time()
-
-#順位表を使った試算
-#bestW = calculateALL(T,statsDataList,rankDataList)
-
-#偏差値を使った試算
-bestW = calculateALLByDaviation(T,statsDataList,rankDataList)
-
-
-end = time.time()
-
-print("Time : ",end-start)
-
-#最良のWを使って順位を算出
-T = []
-
-#順位の場合
-#arrangeData(T,bestW[0],statsDataList)
-
-#偏差値の場合
-arrangeDataByDaviation(T,bestW[0],statsDataList)
-
-#最良順位出力
-printResult(T)
-
-#重み出力
-printW(bestW[0])
-
-#ポイント出力
-print("points:",bestW[1])
+#偏差値計算の場合
+mainByDaviation(stats_file,rank_file,maxWeight)
