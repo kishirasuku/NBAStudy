@@ -240,6 +240,7 @@ def print3rdResult(T):
         print(i+1,"位",elm[0],":",elm[1],"点",flush=True)
 
 def printW(W):
+
     """[スタッツを見やすく出力する]
 
     Args:
@@ -253,6 +254,11 @@ def printW(W):
     print("APG",W[5])
     print("SPG",W[6])
     print("BPG",W[7])
+
+def printScore(W):
+
+    print("総合ポイント:",W[1])
+    print("1チーム当たりの平均誤差",W[1]/30)
 
 def main(stats_file,rank_file,maxWeight):
 
@@ -283,7 +289,7 @@ def main(stats_file,rank_file,maxWeight):
     printW(bestW[0])
 
     #ポイント出力
-    print("points:",bestW[1])
+    printScore(bestW)
 
 def mainByDaviation(stats_file,rank_file,maxWeight):
 
@@ -317,15 +323,15 @@ def mainByDaviation(stats_file,rank_file,maxWeight):
     printW(bestW[0])
 
     #ポイント出力
-    print("points:",bestW[1])
+    printScore(bestW)
 
 
 stats_file = "./dataFile/2021/2021レギュラーシーズンスタッツ.csv"
 rank_file = "./dataFile/2021/2021レギュラーシーズン順位.csv"
-maxWeight = 7
+maxWeight = 4
 
 #通常計算の場合
-main(stats_file,rank_file,maxWeight)
+#main(stats_file,rank_file,maxWeight)
 
 #偏差値計算の場合
 mainByDaviation(stats_file,rank_file,maxWeight)
