@@ -47,8 +47,11 @@ def calculateALL(dataList,rankList,maxWeight):
         [list]: [実際の準備に一番近いおもみリスト]
     """
     T = []
-    omomi = maxWeight
+    omomi = maxWeight + 1
     bestW = [None,10000]
+    
+    under35 = 0
+    Waverage = [0,0,0,0,0,0,0,0]
 
     #5^8通りの重みで試算
     for a in range(1,omomi):
@@ -71,13 +74,22 @@ def calculateALL(dataList,rankList,maxWeight):
                                         #Tと実際の順位を比較しスコアを計算(scoreが小さいほど順位が近い)
                                         score = compareRanking(T,rankList)
 
+                                        if score/30 <= 3.5:
+                                            under35 += 1
+                                            for i,wElm in enumerate(W):
+                                                Waverage[i] += wElm
+
                                         if bestW[1] > score:
                                             bestW[0] = W
                                             bestW[1] = score
 
                                         T = []
+    
+    for i in range(len(Waverage)):
+        Waverage[i] /= under35
 
-    return bestW
+    print("平均誤差が3.5以下の数:",under35)
+    return bestW,Waverage
 
 def calculateALLByDaviation(dataList,rankList,maxWeight):
     """[全ての重みパターンで計算し、一番実際の順位に近いおもみリストを返す]
@@ -92,8 +104,11 @@ def calculateALLByDaviation(dataList,rankList,maxWeight):
     """
 
     T=[]
-    omomi = maxWeight
+    omomi = maxWeight+1
     bestW = [None,10000]
+
+    under35 = 0
+    Waverage = [0,0,0,0,0,0,0,0]
 
     #5^8通りの重みで試算
     for a in range(1,omomi):
@@ -110,11 +125,16 @@ def calculateALLByDaviation(dataList,rankList,maxWeight):
                                         arrangeDataByDaviation(T,W,dataList)
 
                                         #3位までの評価点数結果を出力
-                                        print3rdResult(T)
-                                        print()
+                                        #print3rdResult(T)
+                                        #print()
 
                                         #Tと実際の順位を比較しスコアを計算(scoreが小さいほど順位が近い)
                                         score = compareRanking(T,rankList)
+
+                                        if score/30 <= 3.5:
+                                            under35 += 1
+                                            for i,wElm in enumerate(W):
+                                                Waverage[i] += wElm
 
                                         if bestW[1] > score:
                                             bestW[0] = W
@@ -122,7 +142,12 @@ def calculateALLByDaviation(dataList,rankList,maxWeight):
 
                                         T = []
 
-    return bestW
+
+    for i in range(len(Waverage)):
+        Waverage[i] /= under35
+
+    print("平均誤差が3.5以下の数:",under35)
+    return bestW,Waverage
 
 def arrangeData(T,W,dataList):
     """[評価点リスト[T]を作り上げる]
@@ -214,6 +239,8 @@ def compareRanking(T,rankList):
     for i,elm in enumerate(sorted(T,key=operator.itemgetter(1),reverse=True)):
         for rank in rankList:
             if elm[0] == rank[0]:
+                if abs(i-rank[2]) >= 15:
+                    score += 100
                 score += abs(i-rank[2])
 
     return score
@@ -262,6 +289,10 @@ def printScore(W):
 
 def main(stats_file,rank_file,maxWeight):
 
+    print("スタッツ順位による計算を開始")
+    print("使用データ年度 :",stats_file[11:15])
+    print("重み最大値 : ",maxWeight)
+
     #データ読み込み
     statsDataList = readStatsFile(stats_file)
     rankDataList = readRankFile(rank_file)
@@ -270,7 +301,7 @@ def main(stats_file,rank_file,maxWeight):
     start = time.time()
 
     #順位表を使った試算
-    bestW = calculateALL(statsDataList,rankDataList,maxWeight)
+    bestW,Waverage = calculateALL(statsDataList,rankDataList,maxWeight)
 
     end = time.time()
 
@@ -281,6 +312,8 @@ def main(stats_file,rank_file,maxWeight):
 
     #順位の場合
     arrangeData(T,bestW[0],statsDataList)
+    
+    print("--------------------最良順位データ--------------------")
 
     #最良順位出力
     printResult(T)
@@ -290,8 +323,15 @@ def main(stats_file,rank_file,maxWeight):
 
     #ポイント出力
     printScore(bestW)
+    
+    print("-----------------平均誤差3.5以下の重み平均値-----------------")
+    printW(Waverage)
 
 def mainByDaviation(stats_file,rank_file,maxWeight):
+
+    print("偏差値による計算を開始")
+    print("使用データ年度 :",stats_file[11:15])
+    print("重み最大値 : ",maxWeight)
 
     #データ読み込み
     statsDataList = readStatsFile(stats_file)
@@ -304,7 +344,7 @@ def mainByDaviation(stats_file,rank_file,maxWeight):
     start = time.time()
 
     #偏差値を使った試算
-    bestW = calculateALLByDaviation(statsDataList,rankDataList,maxWeight)
+    bestW,Waverage = calculateALLByDaviation(statsDataList,rankDataList,maxWeight)
 
     end = time.time()
 
@@ -315,6 +355,8 @@ def mainByDaviation(stats_file,rank_file,maxWeight):
 
     #偏差値の場合
     arrangeDataByDaviation(T,bestW[0],statsDataList)
+    
+    print("--------------------最良順位データ--------------------")
 
     #最良順位出力
     printResult(T)
@@ -324,11 +366,14 @@ def mainByDaviation(stats_file,rank_file,maxWeight):
 
     #ポイント出力
     printScore(bestW)
+    
+    print("-----------------平均誤差3.5以下の重み平均値-----------------")
+    printW(Waverage)
 
 
-stats_file = "./dataFile/2021/2021レギュラーシーズンスタッツ.csv"
-rank_file = "./dataFile/2021/2021レギュラーシーズン順位.csv"
-maxWeight = 4
+stats_file = "./dataFile/2020/2020レギュラーシーズンスタッツ.csv"
+rank_file = "./dataFile/2020/2020レギュラーシーズン順位.csv"
+maxWeight = 7 #重みの最大値
 
 #通常計算の場合
 #main(stats_file,rank_file,maxWeight)
