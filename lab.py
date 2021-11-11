@@ -7,11 +7,11 @@ import time
 import os
 import math
 from modules.readModule import readStatsFile,readRankFile
-from modules.printModule import print3rdResult,printResult,printScore,printW
+from modules.printModule import print3rdResult,printResult,printScore,printW,printTop10WAverage
 from modules.arrangeDataModule import arrangeData,arrangeDataByDaviation
 
 def calculateALL(dataList,rankList,maxWeight):
-    """[全ての重みパターンで計算し、一番実際の順位に近いおもみリストを返す]
+    """[全ての重みパターンで計算し、実際の順位に近いおもみリストtop10を返す]
 
     Args:
         T ([String,int]): [チーム名,チームの評価点]
@@ -19,14 +19,12 @@ def calculateALL(dataList,rankList,maxWeight):
         dataList ([list]): [各チームのスタッツデータ]
 
     Returns:
-        [list]: [実際の準備に一番近いおもみリスト]
+        [list]: [実際の準備に一番近いおもみリストtop10]
     """
     T = []
     omomi = maxWeight + 1
-    bestW = [None,10000]
-    
-    under35 = 0
-    Waverage = [0,0,0,0,0,0,0,0]
+
+    top10W = [[None,100000]]*10
 
     #5^8通りの重みで試算
     for a in range(1,omomi):
@@ -49,25 +47,15 @@ def calculateALL(dataList,rankList,maxWeight):
                                         #Tと実際の順位を比較しスコアを計算(scoreが小さいほど順位が近い)
                                         score = compareRanking(T,rankList)
 
-                                        if score/30 <= 3.5:
-                                            under35 += 1
-                                            for i,wElm in enumerate(W):
-                                                Waverage[i] += wElm
-
-                                        if bestW[1] > score:
-                                            bestW[0] = W
-                                            bestW[1] = score
+                                        if top10W[9][1] > score:
+                                            top10W[9] = [W,score]
+                                            top10W = sorted(top10W, reverse=False, key=lambda x: x[1])
 
                                         T = []
-    
-    for i in range(len(Waverage)):
-        Waverage[i] /= under35
-
-    print("平均誤差が3.5以下の数:",under35)
-    return bestW,Waverage
+    return top10W
 
 def calculateALLByDaviation(dataList,rankList,maxWeight):
-    """[全ての重みパターンで計算し、一番実際の順位に近いおもみリストを返す]
+    """[全ての重みパターンで計算し、実際の順位に近いおもみリストtop10を返す]
 
     Args:
         T ([String,int]): [チーム名,チームの評価点]
@@ -75,15 +63,13 @@ def calculateALLByDaviation(dataList,rankList,maxWeight):
         dataList ([list]): [各チームのスタッツデータ]
 
     Returns:
-        [list]: [実際の準備に一番近いおもみリスト]
+        [list]: [実際の準備に一番近いおもみリストtop10]
     """
 
     T=[]
     omomi = maxWeight+1
-    bestW = [None,10000]
 
-    under35 = 0
-    Waverage = [0,0,0,0,0,0,0,0]
+    top10W = [[None,100000]]*10
 
     #5^8通りの重みで試算
     for a in range(1,omomi):
@@ -106,23 +92,13 @@ def calculateALLByDaviation(dataList,rankList,maxWeight):
                                         #Tと実際の順位を比較しスコアを計算(scoreが小さいほど順位が近い)
                                         score = compareRanking(T,rankList)
 
-                                        if score/30 <= 3.5:
-                                            under35 += 1
-                                            for i,wElm in enumerate(W):
-                                                Waverage[i] += wElm
-
-                                        if bestW[1] > score:
-                                            bestW[0] = W
-                                            bestW[1] = score
+                                        if top10W[9][1] > score:
+                                            top10W[9] = [W,score]
+                                            top10W = sorted(top10W, reverse=False, key=lambda x: x[1])
 
                                         T = []
 
-
-    for i in range(len(Waverage)):
-        Waverage[i] /= under35
-
-    print("平均誤差が3.5以下の数:",under35)
-    return bestW,Waverage
+    return top10W
 
 def toDeviationValue(statsDataList):
 
@@ -196,9 +172,11 @@ def doByStats(stats_file,rank_file,maxWeight):
     start = time.time()
 
     #順位表を使った試算
-    bestW,Waverage = calculateALL(statsDataList,rankDataList,maxWeight)
+    top10W = calculateALL(statsDataList,rankDataList,maxWeight)
 
     end = time.time()
+
+    bestW = top10W[0]
 
     print("Time : ",end-start)
 
@@ -207,7 +185,7 @@ def doByStats(stats_file,rank_file,maxWeight):
 
     #順位の場合
     arrangeData(T,bestW[0],statsDataList)
-    
+
     print("--------------------最良順位データ--------------------")
 
     #最良順位出力
@@ -218,9 +196,9 @@ def doByStats(stats_file,rank_file,maxWeight):
 
     #ポイント出力
     printScore(bestW)
-    
-    print("-----------------平均誤差3.5以下の重み平均値-----------------")
-    printW(Waverage)
+
+    #top10情報出力
+    printTop10WAverage(top10W)
 
 def doByDaviation(stats_file,rank_file,maxWeight):
 
@@ -239,9 +217,11 @@ def doByDaviation(stats_file,rank_file,maxWeight):
     start = time.time()
 
     #偏差値を使った試算
-    bestW,Waverage = calculateALLByDaviation(statsDataList,rankDataList,maxWeight)
+    top10W = calculateALLByDaviation(statsDataList,rankDataList,maxWeight)
 
     end = time.time()
+
+    bestW = top10W[0]
 
     print("Time : ",end-start)
 
@@ -250,7 +230,7 @@ def doByDaviation(stats_file,rank_file,maxWeight):
 
     #偏差値の場合
     arrangeDataByDaviation(T,bestW[0],statsDataList)
-    
+
     print("--------------------最良順位データ--------------------")
 
     #最良順位出力
@@ -261,17 +241,21 @@ def doByDaviation(stats_file,rank_file,maxWeight):
 
     #ポイント出力
     printScore(bestW)
-    
-    print("-----------------平均誤差3.5以下の重み平均値-----------------")
-    printW(Waverage)
 
+    #top10情報出力
+    printTop10WAverage(top10W)
 
-stats_file = "./dataFile/2021/2021レギュラーシーズンスタッツ.csv"
-rank_file = "./dataFile/2021/2021レギュラーシーズン順位.csv"
-maxWeight = 5 #重みの最大値
+def main():
+    year = input("調査年度:")
+    maxWeight = int(input("重みの最大値:"))
 
-#通常計算の場合
-doByStats(stats_file,rank_file,maxWeight)
+    stats_file = "./dataFile/"+year+"/"+year+"レギュラーシーズンスタッツ.csv"
+    rank_file = "./dataFile/"+year+"/"+year+"レギュラーシーズン順位.csv"
 
-#偏差値計算の場合
-doByDaviation(stats_file,rank_file,maxWeight)
+    statsOrDaviation = int(input("スタッツ順位なら1,偏差値なら2を入力:"))
+    if statsOrDaviation==1:
+        doByStats(stats_file,rank_file,maxWeight)
+    elif statsOrDaviation==2:
+        doByDaviation(stats_file,rank_file,maxWeight)
+
+main()
