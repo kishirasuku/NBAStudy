@@ -6,34 +6,9 @@ import operator
 import time
 import os
 import math
-
-def readStatsFile(fileName):
-    """[csvファイルからスタッツデータを取得してスタッツリストを返す]
-
-    Args:
-        fileName ([String]): [ファイル名]
-
-    Returns:
-        [list]: [各チームのデータ]
-    """
-    with codecs.open(fileName, "r", "Shift-JIS", "ignore") as file:
-        df = pd.read_table(file, delimiter=",")
-
-    return df.values.tolist()
-
-def readRankFile(fileName):
-    """[csvファイルから順位データを取得して順位リストを返す]
-
-    Args:
-        fileName ([String]): [ファイル名]
-
-    Returns:
-        [list]: [各チームのデータ]
-    """
-    with codecs.open(fileName, "r", "Shift-JIS", "ignore") as file:
-        df = pd.read_table(file, delimiter=",")
-
-    return df.values.tolist()
+from modules.readModule import readStatsFile,readRankFile
+from modules.printModule import print3rdResult,printResult,printScore,printW
+from modules.arrangeDataModule import arrangeData,arrangeDataByDaviation
 
 def calculateALL(dataList,rankList,maxWeight):
     """[全ての重みパターンで計算し、一番実際の順位に近いおもみリストを返す]
@@ -149,44 +124,6 @@ def calculateALLByDaviation(dataList,rankList,maxWeight):
     print("平均誤差が3.5以下の数:",under35)
     return bestW,Waverage
 
-def arrangeData(T,W,dataList):
-    """[評価点リスト[T]を作り上げる]
-
-    Args:
-        T ([String,int]): [チーム名,各チームの総合評価点]
-        W ([int]): [重みリスト]
-        dataList ([int]): [各チームスタッツの順位]
-    """
-    for i in range(1,9):
-        dataList = sorted(dataList, key=operator.itemgetter(i))
-
-        for idx,elm in enumerate(dataList):
-            elm[i] = idx+1
-
-
-    for i in range(30):
-        element = ["team",0]
-        element[0] = dataList[i][0]
-        for j in range(1,9):
-            element[1] += W[j-1]*dataList[i][j]
-        T.append(element)
-
-def arrangeDataByDaviation(T,W,dataList):
-    """[評価点リスト[T]を作り上げる]
-
-    Args:
-        T ([String,int]): [チーム名,各チームの総合評価点]
-        W ([int]): [重みリスト]
-        dataList ([int]): [各チームスタッツの順位]
-    """
-
-    for i in range(30):
-        element = ["team",0]
-        element[0] = dataList[i][0]
-        for j in range(1,9):
-            element[1] += W[j-1]*dataList[i][j]
-        T.append(element)
-
 def toDeviationValue(statsDataList):
 
     teamDataNum = 30
@@ -245,49 +182,7 @@ def compareRanking(T,rankList):
 
     return score
 
-def printResult(T):
-    """[データからの全順位を出力]
-
-    Args:
-        T ([String,int]): [チーム名,各チームの評価点]
-    """
-    for i,elm in enumerate(sorted(T,key=operator.itemgetter(1),reverse=True)):
-        print(i+1,"位",elm[0],":",elm[1],"点")
-
-def print3rdResult(T):
-    """[3位までの結果を出力]
-
-    Args:
-        T ([String]): [チーム名,チームの評価点]
-    """
-    by3rd = sorted(T,key=operator.itemgetter(1),reverse=True)
-    by3rd = by3rd[0:3]
-
-    for i,elm in enumerate(by3rd):
-        print(i+1,"位",elm[0],":",elm[1],"点",flush=True)
-
-def printW(W):
-
-    """[スタッツを見やすく出力する]
-
-    Args:
-        W ([list]): [出力するリスト]
-    """
-    print("FG%",W[0])
-    print("3P%",W[1])
-    print("FT%",W[2])
-    print("ORB",W[3])
-    print("DRB",W[4])
-    print("APG",W[5])
-    print("SPG",W[6])
-    print("BPG",W[7])
-
-def printScore(W):
-
-    print("総合ポイント:",W[1])
-    print("1チーム当たりの平均誤差",W[1]/30)
-
-def main(stats_file,rank_file,maxWeight):
+def doByStats(stats_file,rank_file,maxWeight):
 
     print("スタッツ順位による計算を開始")
     print("使用データ年度 :",stats_file[11:15])
@@ -327,7 +222,7 @@ def main(stats_file,rank_file,maxWeight):
     print("-----------------平均誤差3.5以下の重み平均値-----------------")
     printW(Waverage)
 
-def mainByDaviation(stats_file,rank_file,maxWeight):
+def doByDaviation(stats_file,rank_file,maxWeight):
 
     print("偏差値による計算を開始")
     print("使用データ年度 :",stats_file[11:15])
@@ -371,12 +266,12 @@ def mainByDaviation(stats_file,rank_file,maxWeight):
     printW(Waverage)
 
 
-stats_file = "./dataFile/2020/2020レギュラーシーズンスタッツ.csv"
-rank_file = "./dataFile/2020/2020レギュラーシーズン順位.csv"
-maxWeight = 7 #重みの最大値
+stats_file = "./dataFile/2021/2021レギュラーシーズンスタッツ.csv"
+rank_file = "./dataFile/2021/2021レギュラーシーズン順位.csv"
+maxWeight = 5 #重みの最大値
 
 #通常計算の場合
-#main(stats_file,rank_file,maxWeight)
+doByStats(stats_file,rank_file,maxWeight)
 
 #偏差値計算の場合
-mainByDaviation(stats_file,rank_file,maxWeight)
+doByDaviation(stats_file,rank_file,maxWeight)
