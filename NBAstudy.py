@@ -1,10 +1,6 @@
 from typing import List
-import pandas as pd
-import csv
-import codecs
 import operator
 import time
-import os
 import math
 from modules.readModule import readStatsFile,readRankFile
 from modules.printModule import print3rdResult,printResult,printScore,printW,printTop10WAverage
