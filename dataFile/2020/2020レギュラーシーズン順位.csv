@@ -1,31 +1,31 @@
-チーム名,勝率,順位
-ミルウォーキー バックス,0.639,7
-ヒューストン ロケッツ,0.236,30
-ダラス マーベリックス,0.583,8
-LA クリッパーズ,0.653,5
-ニューオーリンズ ペリカンズ,0.431,21
-ポートランド トレイルブレイザーズ,0.583,8
-ワシントン ウィザーズ,0.472,17
-サンアントニオ スパーズ,0.458,19
-ボストン セルティックス,0.5,16
-フェニックス サンズ,0.708,2
-ロサンゼルス レイカーズ,0.583,8
-ミネソタ ティンバーウルブズ,0.319,25
-トロント ラプターズ,0.375,24
-メンフィス グリズリーズ,0.528,15
-マイアミ ヒート,0.556,13
-アトランタ ホークス,0.569,11
-ブルックリン ネッツ,0.667,4
-ユタ ジャズ,0.722,1
-デンバー ナゲッツ,0.653,5
-フィラデルフィア 76ers,0.681,3
-オクラホマシティ サンダー,0.306,26
-サクラメント キングス,0.431,21
-インディアナ ペイサーズ,0.472,17
-オーランド マジック,0.292,28
-デトロイト ピストンズ,0.278,29
-クリーブランド キャバリアーズ,0.306,26
-シカゴ ブルズ,0.431,21
-ゴールデンステイト ウォリアーズ,0.542,14
-ニューヨーク ニックス,0.569,11
-シャーロット ホーネッツ,0.458,19
+Eastern Conference,W/L%,win%
+Milwaukee Bucks*,0.767,1
+Toronto Raptors*,0.736,2
+Boston Celtics*,0.667,5
+Indiana Pacers*,0.616,7
+Miami Heat*,0.603,11
+Philadelphia 76ers*,0.589,12
+Brooklyn Nets*,0.486,14
+Orlando Magic*,0.452,18
+Charlotte Hornets,0.354,22
+Washington Wizards,0.347,23
+Chicago Bulls,0.338,24
+New York Knicks,0.318,25
+Detroit Pistons,0.303,26
+Atlanta Hawks,0.299,27
+Cleveland Cavaliers,0.292,29
+Los Angeles Lakers*,0.732,3
+Los Angeles Clippers*,0.681,4
+Denver Nuggets*,0.63,6
+Houston Rockets*,0.611,8
+Oklahoma City Thunder*,0.611,9
+Utah Jazz*,0.611,10
+Dallas Mavericks*,0.573,13
+Portland Trail Blazers*,0.473,15
+Memphis Grizzlies,0.466,16
+Phoenix Suns,0.466,17
+San Antonio Spurs,0.451,19
+Sacramento Kings,0.431,20
+New Orleans Pelicans,0.417,21
+Minnesota Timberwolves,0.297,28
+Golden State Warriors,0.231,30
