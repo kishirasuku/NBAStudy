@@ -98,7 +98,7 @@ def calculateALLByDaviation(dataList,rankList,maxWeight):
 
 def toDeviationValue(statsDataList):
 
-    teamDataNum = 30
+    teamDataNum = len(statsDataList)
     averageStats = [0,0,0,0,0,0,0,0]
     standardDeviations = [0,0,0,0,0,0,0,0]
 
@@ -191,7 +191,7 @@ def doByStats(stats_file,rank_file,maxWeight):
     printW(bestW[0])
 
     #ポイント出力
-    printScore(bestW)
+    printScore(bestW,len(rankDataList))
 
     #top10情報出力
     printTop10WAverage(top10W)
@@ -236,7 +236,7 @@ def doByDaviation(stats_file,rank_file,maxWeight):
     printW(bestW[0])
 
     #ポイント出力
-    printScore(bestW)
+    printScore(bestW,len(rankDataList))
 
     #top10情報出力
     printTop10WAverage(top10W)

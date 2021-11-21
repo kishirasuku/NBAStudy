@@ -15,7 +15,7 @@ def arrangeData(T,W,dataList):
             elm[i] = idx+1
 
 
-    for i in range(30):
+    for i in range(len(dataList)):
         element = ["team",0]
         element[0] = dataList[i][0]
         for j in range(1,9):
@@ -31,7 +31,7 @@ def arrangeDataByDaviation(T,W,dataList):
         dataList ([int]): [各チームスタッツの順位]
     """
 
-    for i in range(30):
+    for i in range(len(dataList)):
         element = ["team",0]
         element[0] = dataList[i][0]
         for j in range(1,9):

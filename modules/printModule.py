@@ -37,10 +37,10 @@ def printW(W):
     print("SPG",W[6])
     print("BPG",W[7])
 
-def printScore(W):
+def printScore(W,teamNum):
 
     print("総合ポイント:",W[1])
-    print("1チーム当たりの平均誤差",W[1]/30)
+    print("1チーム当たりの平均誤差",W[1]/teamNum)
 
 def printTop10WAverage(top10W):
     averageW = [0,0,0,0,0,0,0,0]
